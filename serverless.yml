@@ -1,0 +1,25 @@
+service: near-co2-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${opt:stage, 'staging'}
+  region: ${opt:region, 'us-east-1'}
+  environment: 
+    NODE_ENV: "production"
+    DB_URL: "postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer"
+    PORT: 8080
+  memorySize: 2048
+  timeout: 900 
+
+functions:
+  app:
+    handler: server.handler
+    events:
+      - http: 
+          path: /
+          method: ANY
+      - http: 
+          path: /{proxy+}
+          method: ANY
+
